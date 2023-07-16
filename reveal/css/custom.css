@@ -1,3 +1,9 @@
+.reveal .slides > section.present, .reveal .slides > section > section.present {
+  min-height: 100% !important;
+  position: absolute !important;
+  top: 0 !important;
+}
+
 .reveal section img {
     margin: 15px 0px;
     background: rgba(255, 255, 255, 0.12);
@@ -5,7 +11,8 @@
     box-shadow: 0 0 00px rgba(0, 0, 0, 0.15); }
 
 .reveal .slide-number {
-    font-size: 26px;
+    font-family: "Lato", serif;
+    font-size: 20px;
     color: #000;
     background-color: rgba(0, 0, 0, 0.0);
 }
@@ -17,13 +24,26 @@
     height: 400px;
 }
 
+.flex-container {
+    display: flex;
+}
+
+.flex-child {
+    flex: 1;
+}  
+
 .reveal .progress {
     color: #763091;
 }
 
-.reveal .source {
-    color: #999;
+.source {
+    color: #666;
     font-size: 18px;
+    font-weight: bold;
+    position: absolute;
+    bottom: 110px;
+    left: 0px;
+    width: 100%;
 }
 
 .reveal .video-source {
