@@ -1,0 +1,806 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Evolutionary Methods for Interpretable Control</title>
+    <link rel="stylesheet" href="reveal/css/reset.css">
+    <link rel="stylesheet" href="reveal/css/reveal.css">
+    <link rel="stylesheet" href="reveal/css/theme/white.css">
+    <link rel="stylesheet" href="reveal/css/custom.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="reveal/lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'reveal/css/print/pdf.css' : 'reveal/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section>
+                <br />
+                <br />
+                <h2>Evolutionary Methods</h2>
+                <h2>for Interpretable Control</h2>
+                <br />
+                <h4>Dennis G. Wilson</h4>
+                <h4>EvoRL Workshop</h4>
+                <h4>GECCO 2023</h4>
+                <br />
+            </section>
+
+            <section>
+
+                <section>
+                    <h2>Policy search in critical applications</h2>
+
+                    <img src="img/l2f_taxi_path.png" width="40%">
+                    <img src="img/rl-taxi2.png" width="40%">
+                    <div class="source">
+                        Wilson D, et al. "Learning Robust and Readable Control Laws for Aircraft Taxi Control." Under
+                        review.
+                    </div>
+                </section>
+
+
+                <section>
+                    <h2>Autonomous Vehicles</h2>
+                    <br />
+                    <img src="img/self_driving_1.png" width="70%">
+                    <div class="source">
+                        Atakishiyev, Shahin, et al. "Explainable artificial intelligence for autonomous driving: A
+                        comprehensive overview and field guide for future research directions." arXiv preprint
+                        arXiv:2112.11561 (2021).
+                    </div>
+                </section>
+
+                <section>
+                    <h2>How to train your policy</h2>
+                    <br />
+                    <div class="flex-container">
+                        <div class="flex-child">
+                            <img src="img/RL_loop2.png" width="90%">
+                        </div>
+                        <div class="flex-child">
+                            Representation:
+                            <br />
+                            Neural network
+                            <br />
+                            <br />
+                            Optimization:
+                            <br />
+                            <ul>
+                                <li>Value function approximation</li>
+                                <li>Policy gradient</li>
+                                <li>Direct policy search</li>
+                            </ul>
+                            <br />
+                            <br />
+                            Objective:
+                            <br />
+                            \[\begin{aligned}
+                            f(\pi_\theta) = \sum_t^T \gamma^t R(s_t, \pi_\theta(s_t))
+                            \end{aligned} \]
+                            <br />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="source">
+                        Mao, Hongzi, et al. "Resource management with deep reinforcement learning." Proceedings of the
+                        15th ACM workshop on hot topics in networks. 2016.
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Explaining Neural Networks</h2>
+                    <img src="img/self_driving_2.png" width="80%">
+
+                    <div class="source">
+                        Kim, Jinkyu, and John Canny. "Interpretable learning for self-driving cars by visualizing causal
+                        attention." Proceedings of the IEEE international conference on computer vision. 2017.
+                    </div>
+                </section>
+
+                <section>
+                    <h2>The problem with explaining</h2>
+                    <img src="img/saliency.png" width="80%">
+                    <br />
+                    Attention maps and feature importance analysis explain <b>what</b> information is being used, not
+                    <b>how</b>.
+                    <br />
+                    <br />
+
+                    <div class="source">
+                        Rudin, Cynthia. "Stop explaining black box machine learning models for high stakes decisions and
+                        use interpretable models instead." Nature machine intelligence 1.5 (2019): 206-215.
+                    </div>
+                </section>
+
+                <section>
+                    <h2>The many forms of explanation</h2>
+                    <img src="img/explaining.png" width="40%">
+                    <br />
+                    Evolution can optimize control policies which are <b>interpretable by design</b>.
+                    <br />
+                    <br />
+
+                    <div class="source">
+                        Zhou, Ryan, and Ting Hu. "Evolutionary approaches to explainable machine learning." arXiv
+                        preprint arXiv:2306.14786 (2023).
+                    </div>
+                </section>
+
+            </section>
+            <section>
+
+                <section>
+                    <h2>How to get interpretable policies</h2>
+
+                    <img src="img/imitation_learning.jpg" width="70%">
+                    <br />
+                    <br />
+                    Start with a good neural network policy and <b>imitate it</b>.
+                    <br />
+                    Predict expert action as a <b>classification problem</b>.
+                    <br />
+                    <div class="source">
+                        Delgado, Juan, et al. "Robotics in construction: A critical review
+                        of the reinforcement learning and imitation learning paradigms." Advanced Engineering
+                        Informatics 54 (2022): 101787.
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Imitation with Decision Trees</h2>
+                    <img src="img/viper.png">
+                    <br />Pong inputs extracted from raw images:
+                    <br />ball position $(x, y)$ and velocity $(v_x , v_y)$
+                    <br />player paddle position $y_p$ , velocity $v_p$, acceleration $a_p$, and jerk $j_p$.
+                    <div class="source">
+                        Bastani, Osbert, Yewen Pu, and Armando Solar-Lezama. "Verifiable reinforcement learning via
+                        policy extraction." Advances in neural information processing systems 31 (2018).
+                    </div>
+                </section>
+
+
+                <section>
+                    <h2>Imitation with Decision Trees</h2>
+                    <img src="img/sdt.png" width="55%">
+                    <br />
+                    Application to 10x10 visual area around Mario.
+                    <div class="source">
+                        Coppens, Youri, et al. "Distilling deep reinforcement learning policies in soft decision trees."
+                        Proceedings of the IJCAI 2019 workshop on explainable artificial intelligence. 2019.
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Imitation with Functional Trees</h2>
+                    <div class="flex-container">
+                        <div class="flex-child">
+                            <img src="img/gprl1.jpg" width="60%">
+                        </div>
+                        <div class="flex-child">
+                            <img src="img/gprl2.jpg" width="90%">
+                        </div>
+                    </div>
+                    <br />
+                    Model-based and model-free <b>symbolic regression</b> (genetic programming)
+
+                    <div class="source">
+                        Hein, Daniel, et al. "Interpretable policies for reinforcement
+                        learning by genetic programming." Engineering Applications of Artificial Intelligence 76 (2018):
+                        158-169.
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Imitation with Programs</h2>
+                    <div class="flex-container">
+                        <div class="flex-child">
+                            <img src="img/pirl1.png" width="60%">
+                        </div>
+                        <div class="flex-child">
+                            <img src="img/pirl2.png" width="50%">
+                        </div>
+                    </div>
+                    Example policy:
+                    <br />
+                    <img src="img/pirl3.png" width="80%">
+                    <br />
+                    Similar to <b>grammatical evolution</b> with mutation function "neighborhood_pool"
+
+                    <div class="source">
+                        Verma, Abhinav, et al. "Programmatically interpretable reinforcement learning." International
+                        Conference on Machine Learning. PMLR, 2018.
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Generating Policy Programs</h2>
+                    <div class="flex-container">
+                        <div class="flex-child">
+                            <img src="img/dsp1.png" width="50%">
+                        </div>
+                        <div class="flex-child">
+                            <img src="img/dsp2.png" width="70%">
+                        </div>
+                    </div>
+                    Generate programs with a <b>recurrent network</b> guided by an anchor policy.
+
+                    <div class="source">
+                        Landajuela, Mikel, et al. "Discovering symbolic policies with deep reinforcement learning."
+                        International Conference on Machine Learning. PMLR, 2021.
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Generation > Imitation</h2>
+                    <div class="flex-container">
+                        <div class="flex-child">
+                            <img src="img/dsp3.png" width="70%">
+                        </div>
+                        <div class="flex-child">
+                            <img src="img/dsp4.png" width="60%">
+                        </div>
+                    </div>
+                    Imitation policies may not align with expert policies over full trajectories.
+                    <br />
+                    Generated policies, boosted by an expert policy, outperform imitation.
+
+                    <div class="source">
+                        Landajuela, Mikel, et al. "Discovering symbolic policies with deep reinforcement learning."
+                        International Conference on Machine Learning. PMLR, 2021.
+                    </div>
+                </section>
+
+            </section>
+
+            <section>
+                <section>
+                    <h1>Direct search<br />for interpretable policies</h1>
+                    <br />
+                    <h3>
+                        Get reward by looking for reward.
+                        <br />
+                        <br />
+                        You don't have to use neural networks.
+                        <br />
+                        <br />
+                        K.I.S.S.
+                    </h3>
+                </section>
+
+                <section>
+                    <h2>Functional trees as policies</h2>
+                    <div class="flex-container">
+                        <div class="flex-child">
+                            <img src="img/aranha2.png" width="40%">
+                        </div>
+                        <div class="flex-child">
+                            <img src="img/aranha1.png" width="50%">
+                        </div>
+                    </div>
+                    Tree-based genetic programming to <b>maximize cumulative reward</b> on Cart Pole.
+                    <div class="source">
+                        Miranda, Ícaro, et al. "A Comparison Study Between Deep Learning and Genetic Programming
+                        Application in Cart Pole Balancing Problem." 2018 IEEE Congress on Evolutionary Computation
+                        (CEC). IEEE, 2018.
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Interpretable Policies competitive with Deep RL</h2>
+                    <div class="flex-container">
+                        <div class="flex-child">
+                            <img src="img/moo1.png" width="90%">
+                        </div>
+                        <div class="flex-child">
+                            <img src="img/moo2.png" width="80%">
+                        </div>
+                    </div>
+                    Simple policies with cumulative reward similar to Deep RL on control tasks in gym and pybullet.
+                    <div class="source">
+                        Videau, Mathurin, et al. "Multi-objective genetic programming for explainable reinforcement
+                        learning." European Conference on Genetic Programming. 2022.
+                    </div>
+                </section>
+
+                <section>
+                    <h2>GP for eXplainable RL</h2>
+                    <div class="flex-container">
+                        <div class="flex-child">
+                            <video height="400px" autoplay loop controls>
+                                <source src="video/swingup.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="flex-child">
+                            <video height="400px" autoplay loop controls>
+                                <source src="video/hopper.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                    </div>
+                    <pre><code data-trim data-noescape>
+                    def swingup(s):
+                        return [s[4] + s[3]*6.614633680991087 - s[2] + np.exp(if_then_else(s[3]>-0.7571072906634332, s[1], \
+                                15.013603569678889*s[1]))]
+
+                    def hopper(s):
+                        return [np.sin(np.exp(s[8])), -6.257060739725605*(s[7] + np.sin(s[3]+s[7])), \
+                                np.sin(np.sin(s[7])-np.sin(s[8])-s[10]*(s[1]-np.log(abs(s[8]*s[3])+0.0001) - 5.860219777510614))]
+                    </code></pre>
+                    <div class="source">
+                        Videau, Mathurin, et al. "Multi-objective genetic programming for explainable reinforcement
+                        learning." European Conference on Genetic Programming. 2022.
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Linear GP</h2>
+                    <div class="flex-container">
+                        <div class="flex-child">
+                            <img src="img/lgp1.png" width="30%">
+                        </div>
+                        <div class="flex-child">
+                            <img src="img/lgp2.png" width="80%">
+                        </div>
+                    </div>
+                    <b>Register-based</b> genetic programming resulting in functional <b>graphs</b>.
+                    <br />
+                    Very simple to implement and uses standard GA.
+
+                    <div class="source">
+                        Kantschik, Wolfgang, and Wolfgang Banzhaf. "Linear-graph GP-a new GP structure." European
+                        Conference on Genetic Programming. Berlin, Heidelberg: Springer Berlin Heidelberg, 2002.
+                        <br />
+                        Brameier, Markus, Wolfgang Banzhaf, and Wolfgang Banzhaf. Linear genetic programming. Vol. 1.
+                        New York: Springer, 2007.
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Programs as Policies</h2>
+                    <img src="img/leaps.png" width="70%">
+                    <br />
+                    Program synthesis using continuous optimization over a latent program space.
+                    <div class="source">
+                        Trivedi, Dweep, et al. "Learning to synthesize programs as interpretable and generalizable
+                        policies." Advances in neural information processing systems 34 (2021): 25146-25163.
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Weight Agnostic Neural Networks</h2>
+                    <div class="flex-container">
+                        <div class="flex-child">
+                            <video height="400px" autoplay loop controls>
+                                <source src="https://weightagnostic.github.io/assets/mp4/square_biped.mp4"
+                                    type="video/mp4">
+                            </video>
+                            <img src="img/wann_left.png" width="40%">
+                        </div>
+                        <div class="flex-child">
+                            <video height="400px" autoplay loop controls>
+                                <source src="https://weightagnostic.github.io/assets/mp4/square_racer.mp4"
+                                    type="video/mp4">
+                            </video>
+                            <img src="img/wann_right.png" width="40%">
+                        </div>
+                        <br />
+                    </div>
+                    NEAT network optimization with single weight parameter shared across full network.<br />
+                    <b>Parameter-free</b> functional graph.
+
+                    <div class="source">
+                        Gaier, Adam, and David Ha. "Weight agnostic neural networks." Advances in neural information
+                        processing systems 32 (2019).
+                    </div>
+                </section>
+
+            </section>
+
+            <section>
+                <section>
+                    <h2>Cartesian Genetic Programming</h2>
+                    <img class="plain" src="img/cgp/cgp.png">
+                    <br />
+                    A <b>graph-based</b> GP method based on functional node indexing with Cartesian coordinates.
+                    <div class="source">
+                        Miller, Julian Francis. "Cartesian genetic programming: its status and future." Genetic
+                        Programming and Evolvable Machines 21 (2020): 129-168.
+                    </div>
+                </section>
+                <section>
+                    <h2>Floating Point Cartesian Genetic Programming</h2>
+                    <img class="plain" src="img/cgp/fp_cgp.png" width="50%">
+                    <br />
+                    Modern CGP uses a <b>linear representation</b> and a single index per node.
+                    <div class="source">
+                        Wilson, Dennis G., et al. "Positional cartesian genetic programming." arXiv preprint
+                        arXiv:1810.04119 (2018).
+                    </div>
+                </section>
+
+                <section data-background-iframe="halfcheetah.html" data-background-interactive>
+                    <h2>Graph-based policies</h2>
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <img src="img/halfcheetah_cgp.png" width="20%">
+                    <br />
+                    Reward of 7000, similar to PPO and SAC.
+                </section>
+
+                <section data-background-iframe="hopper.html" data-background-interactive>
+                    <h2>Graph-based policies</h2>
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <img src="img/hopper_cgp.png" width="10%">
+                    <br />
+                    Reward of 20000 - 40000 (but no termination criteria)
+                </section>
+
+                <section>
+                    <h2>Critical applications: Airplane taxi</h2>
+
+                    <img src="img/l2f_taxi_path.png" width="40%">
+                    <img src="img/rl-taxi2.png" width="40%">
+                    <div class="source">
+                        Wilson D, et al. "Learning Robust and Readable Control Laws for Aircraft Taxi Control." Under
+                        review.
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Critical applications: Airplane taxi</h2>
+
+                    <img src="img/taxi-result.png" width="10%">
+                    <img src="img/benchmark-convergence.png" width="30%">
+                    <img src="img/attol-centerlne distance.png" width="30%">
+                    <br />
+                    Policy:
+                    <br />
+                    <img src="img/equationCGP.png" width="30%">
+
+                    <div class="source">
+                        Wilson D, et al. "Learning Robust and Readable Control Laws for Aircraft Taxi Control." Under
+                        review.
+                    </div>
+                </section>
+
+            </section>
+
+            <section>
+                <section data-background-video="video/asteroids.mp4" data-background-color="#000000">
+                    <h2>Arcade Learning Environment</h2>
+                    Bellemare, Marc G., et al. "The arcade learning environment: An evaluation platform for general
+                    agents." Journal of Artificial Intelligence Research 47 (2013): 253-279.
+                    <br />
+
+                    Used in:
+                    <ul>
+                        <li>HyperNEAT [Hausknecht et al., 2012]</li>
+                        <li>DQN [Mnih et al., 2015]</li>
+                        <li>A3C [Mnih et al., 2016]</li>
+                        <li>Tangled Problem Graphs [Kelly and Heywood, 2017]</li>
+                        <li>CGP [Wilson et al., 2018]</li>
+                        <li>Go-explore [Ecoffet et al., 2019]</li>
+                        <li>Flare [Shang et al., 2021]</li>
+                    </ul>
+
+                    Standard benchmark for visual control
+                </section>
+                <section>
+                    <h2>Control with convolutional neural network policy</h2>
+                    <img class="plain" src="img/dqn.png">
+                    <br />
+                    Policy network maps pixel space representation to small action distribution
+                    <div class="source">
+                        Mnih, Volodymyr, et al. "Human-level control through deep reinforcement learning." Nature
+                        518.7540 (2015): 529-533.
+                    </div>
+                </section>
+                <section>
+                    <h2>Explaining Atari agents</h2>
+                    <img class="plain" src="img/pong_saliency.png">
+                    <img class="plain" src="img/spaceinvaders_saliency.png">
+                    <br />
+                    Attention maps can show <b>what</b> information a network is using.
+                    <br />
+                    Observation and expertise can, in some cases, demonstrate <b>how</b> that information informs the
+                    decision.
+                    <div class="source">
+                        Greydanus, Samuel, et al. "Visualizing and understanding atari agents." International conference
+                        on machine learning. PMLR, 2018.
+                    </div>
+                </section>
+                <section>
+                    <h2>CGP for Atari playing</h2>
+                    <img class="plain" src="img/scheme.png">
+                    <div class="source">
+                        Wilson, Dennis G., et al. "Evolving simple programs for playing Atari games." Proceedings of the
+                        genetic and evolutionary computation conference. 2018.
+                    </div>
+                </section>
+                <section>
+                    <h6>Centipede</h6>
+                    <video height="400px" autoplay loop controls>
+                        <source src="video/centipede.mp4" type="video/mp4">
+                    </video>
+                    <img class="plain" src="img/centipede_graph.png" height="400px">
+                    <br />
+                    <br />
+                    <small>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Human</th>
+                                    <th>Double</th>
+                                    <th>DQN</th>
+                                    <th>Prioritized</th>
+                                    <th>A3C:FF</th>
+                                    <th>A3C:LSTM</th>
+                                    <th>TPG</th>
+                                    <th>HyperNEAT</th>
+                                    <th>CGP</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>11963</td>
+                                    <td>3853.5</td>
+                                    <td>4881</td>
+                                    <td>3421.9</td>
+                                    <td>3755.8</td>
+                                    <td>1997</td>
+                                    <td>34731.7</td>
+                                    <td>25275.2</td>
+                                    <td>24708</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </small>
+                    <div class="source">
+                        Wilson, Dennis G., et al. "Evolving simple programs for playing Atari games." Proceedings of the
+                        genetic and evolutionary computation conference. 2018.
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Kung Fu Master</h2>
+                    <video height="400px" autoplay loop controls>
+                        <source src="video/kung_fu_master.mp4" type="video/mp4">
+                    </video>
+                    <img class="plain" src="img/kung_fu_master_graph.png" height="400px">
+                    <br />
+                    <br />
+                    <small>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Human</th>
+                                    <th>Double</th>
+                                    <th>DQN</th>
+                                    <th>Prioritized</th>
+                                    <th>A3C:FF</th>
+                                    <th>A3C:LSTM</th>
+                                    <th>TPG</th>
+                                    <th>HyperNEAT</th>
+                                    <th>CGP</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>22736</td>
+                                    <td>30207</td>
+                                    <td>24288</td>
+                                    <td>31244</td>
+                                    <td>28819</td>
+                                    <td>40835</td>
+                                    <td></td>
+                                    <td>7720</td>
+                                    <td>57400</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </small>
+                    <div class="source">
+                        Wilson, Dennis G., et al. "Evolving simple programs for playing Atari games." Proceedings of the
+                        genetic and evolutionary computation conference. 2018.
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Boxing</h2>
+                    <video height="400px" autoplay loop controls>
+                        <source src="video/boxing.mp4" type="video/mp4">
+                    </video>
+                    <img class="plain" src="img/boxing_graph.png" height="400px">
+                    <br />
+                    <br />
+                    <small>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Human</th>
+                                    <th>Double</th>
+                                    <th>DQN</th>
+                                    <th>Prioritized</th>
+                                    <th>A3C:FF</th>
+                                    <th>A3C:LSTM</th>
+                                    <th>TPG</th>
+                                    <th>HyperNEAT</th>
+                                    <th>CGP</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>4.3</td>
+                                    <td>73.5</td>
+                                    <td>77.3</td>
+                                    <td>68.6</td>
+                                    <td>59.8</td>
+                                    <td>37.3</td>
+                                    <td></td>
+                                    <td>16.4</td>
+                                    <td>38.4</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </small>
+                    <div class="source">
+                        Wilson, Dennis G., et al. "Evolving simple programs for playing Atari games." Proceedings of the
+                        genetic and evolutionary computation conference. 2018.
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Interpretability in high-dimensional data</h2>
+
+                    <img src="img/self_driving_1.png" width="50%">
+                    <ul>
+                        <li>Break the data down into lower dimension</li>
+                        <li>Use explanability methods like attention maps</li>
+                        <li>Construct an interpretable analysis pipeline using adapted functions</li>
+                        <li>Split the problem into different interpretable parts</li>
+                    </ul>
+                    <div class="source">
+                        Atakishiyev, Shahin, et al. "Explainable artificial intelligence for autonomous driving: A
+                        comprehensive overview and field guide for future research directions." arXiv preprint
+                        arXiv:2112.11561 (2021).
+                    </div>
+
+                </section>
+
+                <section>
+                    <h2>TPG: Decimal Feature Grid</h2>
+                    <img class="plain" src="img/tpg.png">
+                    <br />
+                    Break the data down into lower dimension: small grid with discretized color palette
+                    <div class="source">
+                        Kelly, Stephen, and Malcolm I. Heywood. "Emergent tangled graph representations for Atari game
+                        playing agents."<br /> Genetic Programming: 20th European Conference, EuroGP 2017, Amsterdam,
+                        The Netherlands, April 19-21, 2017, Proceedings 20. Springer International Publishing, 2017.
+                    </div>
+                </section>
+                <section>
+                    <h2>TPG: Multi-Task Learning</h2>
+                    <img class="plain" src="img/tpg_multi.png" height="500">
+                    <br />
+                    Interpretable graphs inherently allow for understanding <b>mutual information</b> between control
+                    policies.
+                    <div class="source">
+                        Kelly, Stephen, and Malcolm I. Heywood. "Multi-task learning in atari video games with emergent
+                        tangled program graphs." Proceedings of the Genetic and Evolutionary Computation Conference.
+                        2017.
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Interpretable CGP Encoder Controller</h2>
+                    <img class="plain" src="img/icec1.png" height="500">
+                    <br />
+                    Construct an interpretable analysis pipeline using adapted functions.
+                    <br />
+                    Split the problem into different interpretable parts.
+                    <div class="source">
+                        Lecarpentier, Erwan, et al. "Cartesian Genetic Programming for Learning Interpretable Agents
+                        Playing Atari Games." Under review.
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Interpretable CGP Encoder Controller</h2>
+                    <img class="plain" src="img/icec2.png" width="30%">
+                    <br />
+                    Bowling: 
+                    <br />
+                    hit action button when character is in 5,2
+                    <br />
+                    hit down direction when ball is launched
+                    <br />
+                    hit up direction when ball is in 4,3 or 4,5.
+                   <div class="source">
+                        Lecarpentier, Erwan, et al. "Cartesian Genetic Programming for Learning Interpretable Agents
+                        Playing Atari Games." Under review.
+                    </div>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h2>Takeaways</h2>
+
+                    <ul>
+                        <li>Explainable policies are necessary for critical applications</li>
+                        <li>Interpretable policy representations give naturally to explanations</li>
+                        <li>Evolutionary policy search is well-suited to interpretable representations</li>
+                        <li>Many representations exist: trees, graphs, programs</li>
+                        <li>Not a very active domain and requires more comparison between methods</li>
+                        <li>High-dimensional data like visual representations still difficult</li>
+                    </ul>
+                    <br/>
+                    <video height="400px" autoplay loop controls>
+                        <source src="video/qbert.mp4" type="video/mp4">
+                    </video>
+                    <br/>
+                    Thank you!
+                </section>
+            </section>
+            <div id="footer-container" style="display:none;">
+                <div id="footer">
+                    Evolutionary Methods for Interpretable Control, GECCO 2023
+                    <br />
+                    <a
+                        href="https://github.com/d9w/interpretable_control/">https://github.com/d9w/interpretable_control</a>
+                    <br />
+                    Dennis G. Wilson
+                    <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img
+                            alt="Creative Commons License" style="border-width:0"
+                            src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
+                </div>
+            </div>
+        </div>
+
+        <script src="reveal/js/reveal.js"></script>
+        <script src="reveal/js/jquery-3.5.0.min.js"></script>
+
+        <script>
+            Reveal.initialize({
+                width: "90%",
+                height: "90%",
+                slideNumber: 'c',
+                transition: 'none',
+                progress: true,
+                hash: true,
+                center: false,
+                dependencies: [
+                    { src: 'reveal/plugin/markdown/marked.js' },
+                    { src: 'reveal/plugin/markdown/markdown.js' },
+                    { src: 'reveal/plugin/math/math.js' },
+                    { src: 'reveal/plugin/highlight/highlight.js' },
+                    { src: 'reveal/plugin/notes/notes.js', async: true }
+                ]
+            });
+            var footer = $('#footer-container').html();
+            $('div.reveal').append(footer);
+        </script>
+</body>
+
+</html>
